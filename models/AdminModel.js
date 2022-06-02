@@ -1,5 +1,3 @@
-
-
 let mongoose = require('mongoose');
 let schema = new mongoose.Schema({
     email: {
@@ -14,11 +12,8 @@ let schema = new mongoose.Schema({
         sparse:true,
     },
     lastName:  {type:String,sparse:true},
-    password: {
-        type: String,
-        required: true
-    }
+    phone: String,
 
 });
-let userModel = new mongoose.model('User', schema);
+let userModel = new mongoose.model('Admin', schema);
 module.exports = userModel;

@@ -1,28 +1,28 @@
-const UserModel = require('../models/UserModel')
+const AdminModel = require('../models/AdminModel')
 exports.create = async (req, res) => {
     if (!req.body.email && !req.body.firstName && !req.body.lastName && !req.body.phone) {
         res.status(400).render('results', {mydata: "Content can not be empty!"})
     }
-    const user = new UserModel({
+    const admin= new AdminModel({
         email: req.body.email,
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         phone: req.body.phone
     });
-    await user.save().then(data => {
+    await admin.save().then(data => {
 
-        res.status(200).render('results', {mydata: "user "+ data.firstName +" created succesfully!"})
+        res.status(200).render('results', {mydata: "admin "+ data.firstName +" created succesfully!"})
     }).catch(err => {
 
-        res.render('results', {mydata: err.message || "Some error occurred while creating user"})
+        res.render('results', {mydata: err.message || "Some error occurred while creating admin"})
     });
 };
 
 exports.findAll = async (req, res) => {
     try {
-        const user = await UserModel.find();
+        const admin = await AdminModel.find();
 
-        res.status(200).render('results', {mydata: user})
+        res.status(200).render('results', {mydata: admin})
     } catch(error) {
         res.status(404).render('results', {mydata: error.message})
 
@@ -31,14 +31,14 @@ exports.findAll = async (req, res) => {
 
 exports.findOne = async (req, res) => {
     try {
-        const user = await UserModel.findOne({email: req.query.email}).exec();
+        const admin = await AdminModel.findOne({email: req.query.email}).exec();
 
-        if (user===null){
-            res.status(404).render('results', {mydata: "user not found"
+        if (admin===null){
+            res.status(404).render('results', {mydata: "admin not found"
             })
         }else{
-            res.status(200).render('results', {mydata: "user :"+ user.firstName +" "
-                    + user.lastName +" "+ user.email +" "+ user.phone
+            res.status(200).render('results', {mydata: "admin :"+ admin.firstName +" "
+                    + admin.lastName +" "+ admin.email +" "+ admin.phone
             })
         }
 
@@ -60,7 +60,7 @@ exports.update = async (req, res) => {
     const query = req.body.oldEmail;
 
 
-    await UserModel.findOneAndUpdate({email: query}, {email:req.body.newEmail,
+    await AdminModel.findOneAndUpdate({email: query}, {email:req.body.newEmail,
         firstName:req.body.newFirstName,
         lastName:req.body.newLastName,
         phone:req.body.newPhone
@@ -68,10 +68,10 @@ exports.update = async (req, res) => {
         console.log(data)
         if (!data) {
 
-            res.status(404).render('results', {mydata: `User not found.`})
+            res.status(404).render('results', {mydata: `admin not found.`})
         }else{
 
-            res.status(200).render('results', {mydata: "User updated successfully."})
+            res.status(200).render('results', {mydata: "admin updated successfully."})
         }
     }).catch(err => {
 
@@ -82,17 +82,17 @@ exports.update = async (req, res) => {
 exports.destroy = async (req, res) => {
 
 
-    let useremail=req.body.email
-    await UserModel.deleteOne({email: useremail}).then(data => {
+    let adminemail=req.body.email
+    await AdminModel.deleteOne({email: adminemail}).then(data => {
 
         if (data.deletedCount===0) {
 
-            res.status(404).render('results', {mydata: "User not found"})
+            res.status(404).render('results', {mydata: "admin not found"})
 
         } else {
 
 
-            res.status(200).render('results', {mydata: "user "+useremail+" deleted succesfully!"})
+            res.status(200).render('results', {mydata: "admin "+adminemail+" deleted succesfully!"})
         }
     }).catch(err => {
 

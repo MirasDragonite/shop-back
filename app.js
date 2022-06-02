@@ -2,11 +2,12 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const ejs=require('ejs')
 const mongoURI='mongodb://localhost:27017/sessions';
-
+const bcrypt= require('bcrypt');
 const methodOverride = require('method-override')
 const swaggerUi = require('swagger-ui-express')
 swaggerDocument = require('./swagger.json');
 const app = express();
+var path = require("path");
 //const port = 3000
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -17,8 +18,9 @@ app.use(express.static('public'))
 app.use(methodOverride('_method'))
 
 const UserRoute = require('./routes/UserRoute')
+const AdminRoute=require('./routes/AdminRoute')
 app.use('/user',UserRoute)
-
+app.use('/admin',AdminRoute)
 
 const dbConfig = require('./config/database.config.js');
 const mongoose = require('mongoose');
@@ -69,14 +71,16 @@ app.use('/shop-three-columns', require('./routes/shop-three-columns'))
 app.use('/shop-right-sidebar', require('./routes/shop-right-sidebar'))
 app.use('/index-two', require('./routes/index-two'))
 app.use('/index', require('./routes/index'))
-app.use('/', require('./routes/index2'))
+app.use('/', require('./routes/index'))
 app.use('/shop-wishlist', require('./routes/shop-wishlist'))
 app.use('/single-affiliate-product', require('./routes/single-affiliate-product'))
 app.use('/single-group-product', require('./routes/single-group-product'))
 app.use('/single-normal-product', require('./routes/single-normal-product'))
 app.use('/single-product', require('./routes/single-product'))
 app.use('/weather', require('./routes/weather'))
-
+app.use("/login", require("./routes/login"));
+app.use("/register", require("./routes/register"));
+app.use(express.urlencoded({extended: false}))
 app.post('/',((req, res) =>{
     let cityname=req.body.city
     let key="d134b1b82ccbb2a01099550a3393edb5"
@@ -99,21 +103,15 @@ app.get('/', (req, res) => {
     res.render('index');
 });
 
-/*app.post('/', (req, res) => {
-    create(req,res)
-});*/
 
-/*app.get('/', (req, res) => {
-    findAll(req, res)
-});*/
 
 app.get('/find', (req, res) => {
     res.render('find');
 });
-/*app.get('/findbyemail', (req, res) => {
-    findOne(req,res)
-});*/
 
+app.get('/user', (req, res) => {
+    res.render('result');
+});
 app.get('/update', (req, res) => {
     res.render('update');
 });
@@ -123,10 +121,12 @@ app.get('/delete', (req, res) => {
 });
 
 
+
+
+
+
 let port = process.env.PORT||3000;
-/*if (port == null || port == "") {
-    port = 3000;
-}*/
+
 
 app.listen(port, () => {
     console.log(`Server is listening on port http://localhost:${port}`);

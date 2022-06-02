@@ -2,10 +2,10 @@
   "swagger": "2.0",
   "info": {
     "version": "1.0.0",
-    "title": "My User Project CRUD",
-    "description": "My User Project Application API",
+    "title": "Swagger ",
+    "description": "Miras/Aueskhan",
     "license": {
-      "name": "AITU",
+      "name": "shoose",
       "url": "https://opensource.org/licenses/MIT"
     }
   },
